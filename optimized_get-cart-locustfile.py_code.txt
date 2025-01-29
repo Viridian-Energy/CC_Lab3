@@ -1,0 +1,12 @@
+Changes in code : get_cart function has been changed/optimized. The optimizations were made to improve code clarity, efficiency, and security. Using context managers ensures proper resource handling, while switching to JSON for storing cart contents avoids the security risks of eval() and simplifies data manipulation. Additionally, redundant code was eliminated, making the functions more modular and maintainable
+
+Code :
+
+def get_cart(username: str) -> list:
+    with connect('carts.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT contents FROM carts WHERE username = ?', (username,))
+        cart = cursor.fetchone()
+        if cart and cart['contents']:
+            return json.loads(cart['contents'])
+        return []
